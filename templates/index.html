@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block 'title' %}Home page - social media{% endblock 'title' %}
+
+{% block 'style' %}
+    .img {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+    }
+{% endblock  %}
+
+{% block 'content' %}
+    <div class="col-lg-4 col-md-6 col-12 justify-conntent-center d-flex flex-wrap w-100">
+       
+        {% for post in posts  %}
+        <div class="col-lg-4 col-md-6 col-12 p-2">
+            <div class="post-container text-white border border-dark">
+                <div style="width: 100%; height:190px">
+                    <img src="{{ post.picture.url }}" class="img" />
+                </div>
+                <div class="p-2">
+                    {% comment %} <div style="height: 55px;"> {% endcomment %}
+                        <h3 style="height: 59px;">{{ post.title|truncatechars:45 }}</h3>
+                    {% comment %} </div> {% endcomment %}
+                    {% comment %} <div style="height: 55px;"> {% endcomment %}
+                        <a href="{% url "profile_url" post.author.username %}" style="color: gray; text-decoration: none;">{{ post.author.name }}</a>
+                        <p style="height: 55px;">{{ post.description|truncatechars:65 }}</p>
+                    {% comment %} </div> {% endcomment %}
+                    <a href="{% url 'postd_url' post.id %}" class="btn btn-primary w-100">Read More</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+{% endblock 'content' %}

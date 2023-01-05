@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block 'title' %}{{ user_profile.user.username }}'s profile{% endblock %}
+{% block 'style' %}
+    .img {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+        margin-top: 0px;
+    }
+{% endblock  %}
+{% block 'content' %}
+    <div class="col-12 d-lg-flex d-md-flex d-block">
+        <div class="col-lg-4 col-md-6 col-12 text-white mb-5 p-1">
+            <img src="{{ user_profile.profile_picture.url }}" class="mb-2" width="100%" height="250px" style="object-fit: cover;">
+            <h3>{{ user_profile.user.name }} {{ user_profile.user.last_name }}</h3>
+            <hr>
+            <span style="margin-right: 10px"><b>Followers</b> {{ user_profile.followers.count }}</span>
+            <span><b>Following</b> {{ user_profile.followings.count }}</span>
+            <hr>
+            <p>{{ user_profile.about }}</p>
+        </div>
+        <div class="col-lg-8 col-md-6 col-12 text-white d-flex flex-wrap p-1">
+            {% for post in user.posts.all %}
+            <div class="col-lg-6 col-md-12 col-12 p-2 pt-0">
+                <div class="post-container text-white border border-dark">
+                    <div style="width: 100%; height:190px">
+                        <img src="{{ post.picture.url }}" class="img" />
+                    </div>
+                    <div class="p-2">
+                        {% comment %} <div style="height: 55px;"> {% endcomment %}
+                            <h3 style="height: 59px;">{{ post.title|truncatechars:45 }}</h3>
+                        {% comment %} </div> {% endcomment %}
+                        {% comment %} <div style="height: 55px;"> {% endcomment %}
+                            <a href="{% url "profile_url" post.author.username %}" style="color: gray; text-decoration: none;">{{ post.author.name }}</a>
+                            <p style="height: 55px;">{{ post.description|truncatechars:65 }}</p>
+                        {% comment %} </div> {% endcomment %}
+                        <a href="{% url 'postd_url' post.id %}" class="btn btn-primary w-100">Read More</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

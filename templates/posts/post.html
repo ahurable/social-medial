@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block 'title' %} post {{ id }} {% endblock %}
+{% block 'style' %}
+    .information-box {
+        background-color: #20184a;
+        border-radius: 7px;
+    }
+    #likeBtn, #followBtn {
+        font-size: 19pt;
+        margin-right: 18px;
+        cursor: pointer;
+    }
+{% endblock %}
+{% block 'content' %}
+    <div class="d-lg-flex justify-content-center">
+        <div class="col-lg-8 col-md-12 col-12 text-white p-1">
+            <div style="width: 100%; height: 400px;">
+                <img src="{{ post.picture.url }}" style="width: 100%; height: 100%; object-fit: cover;" alt="">
+            </div>
+            <div class="p-4">
+            <h1>{{ post.title }}</h1>
+            <a style="color: gray; text-decoration: none;" href="{% url "profile_url" post.author.username %}">{{ post.author.name }}</a>
+            
+            <div class="my-1">
+                {% if user in post.likes.all %}
+                    <a onclick="like({{ post.id }})" id="likeBtnCon" style="text-decoration: none; color: #ff004c;"><span id="likeBtn" style="color: #ff004c;"><i class="fa-solid fa-heart"></i></span></a>
+                    {% else %}
+                    <a onclick="like({{ post.id }})" id="likeBtnCon" style="text-decoration: none; color: white;"><span id="likeBtn"><i class="fa-solid fa-heart"></i></span></a>
+                {% endif %}
+                <span style="position: relative; top: -3px; right: 19px" id="likeCount">{{ post.likes.count }}</span>
+                {% if user not in post.author.profile.followers.all %}
+                <a href="/users/follow/{{ post.author.id }}" style="text-decoration: none; color: white;"><span id="followBtn"><i class="fa-solid fa-user-plus"></i></span></a>
+                {% else %}
+                <a href="/users/follow/{{ post.author.id }}" style="text-decoration: none; color: #ff004c;"><span id="followBtn"><i class="fa-solid fa-user-minus"></i></span></a>
+                {% endif %}
+            </div>
+
+            <p>
+                {{ post.description }}    
+            </p>
+            <p>
+                <form action="{% url "comment_url" post.id %}" method="post">
+                {% csrf_token %}
+                {{ comment_form.as_p }}
+                <button type="submit" class="btn btn-outline-primary">
+                    Submit
+                </button>
+                </form>
+
+            </p>
+
+            {% for comment in comments %}
+            <div class="w-100 border border-dark mb-3 p-2">
+                <h3>{{ comment.author }}</h3>
+                <span style="color:gray"><i>posted on: {{ comment.date }}</i></span>
+                <p>{{ comment.comment }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        </div>
+        <div class="col-lg-4 col-md-12 col-12 text-white mb-5 p-1">
+            <img src="{{ post.author.profile.profile_picture.url }}" width="100%" height="250px" class="mb-2" style="object-fit: cover;">
+            <a href="{% url "profile_url" post.author.username %}" style="text-decoration: none; color: white;"><h3>{{ post.author.name }} {{ post.author.last_name }}</h3></a>
+            <hr>
+            <span style="margin-right: 10px"><b>Followers</b> {{ post.author.profile.followers.count }}</span>
+            <span><b>Following</b> {{ post.author.profile.followings.count }}</span>
+            <hr>
+            <p>{{ post.author.profile.about }}</p>
+        </div>
+    </div>
+{% endblock  %}
