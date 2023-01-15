@@ -21,7 +21,7 @@
                 </div>
                 <div class="p-2">
                     {% comment %} <div style="height: 55px;"> {% endcomment %}
-                        <h3 style="height: 59px;">{{ post.title|truncatechars:45 }}</h3>
+                        <h3 style="height: 59px;">{{ post.title|truncatechars:37 }}</h3>
                     {% comment %} </div> {% endcomment %}
                     {% comment %} <div style="height: 55px;"> {% endcomment %}
                         <a href="{% url "profile_url" post.author.username %}" style="color: gray; text-decoration: none;">{{ post.author.name }}</a>

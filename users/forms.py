@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import UserModel
+from .models import UserModel, ProfileModel
 
 class Register(forms.ModelForm):
 
@@ -46,3 +46,12 @@ class Login(forms.Form):
 
     username = forms.CharField(max_length=18, widget=forms.TextInput(attrs={'class': 'form-control bg-dark text-white'}))
     password = forms.CharField(max_length=18, widget=forms.PasswordInput(attrs={'class': 'form-control bg-dark text-white'}))
+
+class ProfileEdit(forms.ModelForm):
+    class Meta:
+        model = ProfileModel
+        fields = ['profile_picture','about']
+        widgets = {
+            'profile_picture': forms.FileInput(attrs={'class':'form-control bg-dark text-white'}),
+            'about': forms.Textarea(attrs={'class':'form-control bg-dark text-white'}),
+        }

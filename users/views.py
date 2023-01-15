@@ -3,7 +3,7 @@ from django.views import View
 from django.http import HttpResponse
 from django.contrib.messages import success, error
 from django.contrib.auth import authenticate, login, logout
-from .forms import Register, Login
+from .forms import Register, Login, ProfileEdit
 from .models import ProfileModel,UserModel
 # Create your views here.
 
@@ -85,8 +85,19 @@ def FollowOpView(request, id):
         error(request, "You should login into site first", extra_tags="danger")
         return redirect(request.META.get("HTTP_REFERER"))
 
-def ProfileView(request, username):
+class ProfileView(View):
+    def get(self, request, username):
+        user = UserModel.objects.get(username=username)
+        user_profile = ProfileModel.objects.get(user=user)
+        if request.user.username == username:
+            profile_form = ProfileEdit()
+            return render(request, "users/profile.html", {"user_profile": user_profile, "user": user, "profile_form": profile_form})
+        return render(request, "users/profile.html", {"user_profile": user_profile, "user": user})
 
-    user = UserModel.objects.get(username=username)
-    user_profile = ProfileModel.objects.get(user=user)
-    return render(request, "users/profile.html", {"user_profile": user_profile, "user": user})
+    def post(self,request, username):
+        profile = request.user.profile
+        form = ProfileEdit(data=request.POST, files=request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            success(request, "your profile updated with successfully")
+            return redirect(request.META.get("HTTP_REFERER"))

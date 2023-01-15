@@ -43,7 +43,7 @@ def img_upload(instance, path):
 
 class ProfileModel(models.Model):
 
-    profile_picture = models.ImageField(upload_to=img_upload, default="users/img/UserDefaultPicture.webp")
+    profile_picture = models.ImageField(upload_to=img_upload, default="users/img/UserDefaultPicture.webp", null=True, blank=True)
     about  = models.TextField()
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile")
     followers = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="followers")

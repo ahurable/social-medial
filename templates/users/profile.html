@@ -19,6 +19,34 @@
             <span><b>Following</b> {{ user_profile.followings.count }}</span>
             <hr>
             <p>{{ user_profile.about }}</p>
+            {% if profile_form %}
+                                {% comment %}  {% endcomment %}
+                                <button type="button" class="btn text-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    Edit Profile
+                                  </button>
+                                  
+                                  <!-- Modal -->
+                                  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog bg-dark">
+                                      <div class="modal-content bg-dark">
+                                        <div class="modal-header bg-dark">
+                                          <h5 class="modal-title" id="exampleModalLabel">Edit Profile</h5>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form method="post"  enctype="multipart/form-data">
+                                                {% csrf_token %}
+                                                {{ profile_form.as_p }}
+                                        </div>
+                                        <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                          <button type="submit" class="btn btn-primary">Save changes</button>
+                                        </form>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                            {% endif %}
         </div>
         <div class="col-lg-8 col-md-6 col-12 text-white d-flex flex-wrap p-1">
             {% for post in user.posts.all %}
@@ -29,11 +57,12 @@
                     </div>
                     <div class="p-2">
                         {% comment %} <div style="height: 55px;"> {% endcomment %}
-                            <h3 style="height: 59px;">{{ post.title|truncatechars:45 }}</h3>
+                            <h3 style="height: 59px;">{{ post.title|truncatechars:37 }}</h3>
                         {% comment %} </div> {% endcomment %}
                         {% comment %} <div style="height: 55px;"> {% endcomment %}
                             <a href="{% url "profile_url" post.author.username %}" style="color: gray; text-decoration: none;">{{ post.author.name }}</a>
                             <p style="height: 55px;">{{ post.description|truncatechars:65 }}</p>
+                            
                         {% comment %} </div> {% endcomment %}
                         <a href="{% url 'postd_url' post.id %}" class="btn btn-primary w-100">Read More</a>
                     </div>
